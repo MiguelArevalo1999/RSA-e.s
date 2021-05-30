@@ -1,9 +1,6 @@
 from tkinter import *
 from tkinter import messagebox, filedialog
 from tkinter import ttk
-from Cryptodome.Cipher import PKCS1_OAEP
-from Cryptodome.PublicKey import RSA
-from PIL import ImageTk, Image
 import tkinter as tk
 import os, sys
 from Crypto.PublicKey import RSA
@@ -11,7 +8,7 @@ from Crypto.Hash import SHA256
 from Crypto.Signature import PKCS1_v1_5
 
 raiz=Tk()
-raiz.title("RSA Team 1 Cryptography")
+raiz.title("Digital Signature")
 raiz.resizable(0,0)
 
 raiz.geometry("500x250")
@@ -47,10 +44,10 @@ def generar_llaves():
 def seleccionar_funcion():
         combo_sel=combo.get()
         if combo_sel == "Encrypt":
-            generate_signature(key, data, sig_f)
+            pass
             messagebox.showinfo("Success","Mensaje Encrypted Correctly")
         elif combo_sel == "Decrypt":
-            verify_signature(key, data, sig_f)
+            pass
             #messagebox.showinfo("Success","Message Decrypted Correctly")
         else:
             messagebox.showinfo("Error ","You must select an option")
@@ -74,9 +71,7 @@ sel.place(x=50,y=180)
 sel=Button(raiz, text="Generate Keys",command=generar_llaves)
 sel.place(x=200,y=180)
 
-data_f = "mensaje.txt"
-key_f = "privkey.out"
-sig_f = "mensaje_C_D.txt"
+
 
 def generate_signature(key, data, sig_f):
     print("Generating Signature")
@@ -86,14 +81,4 @@ def generate_signature(key, data, sig_f):
     signature = signer.sign(h)
     with open(sig_f, 'wb') as f: f.write(signature)
 
-def verify_signature(key, data, sig_f):
-    print("Verifying Signature")
-    h = SHA256.new(data)
-    rsa = RSA.importKey(key)
-    signer = PKCS1_v1_5.new(rsa)
-    with open(sig_f, 'rb') as f: signature = f.read()
-    rsp = "Success" if (signer.verify(h, signature)) else " Verification Failure"
-    print(rsp)
-
-# Read all file contents
-with open(key_f, 'rb') as f: key = f.read()
+raiz.mainloop()
