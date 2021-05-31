@@ -36,19 +36,18 @@ text.place(x=125,y=7)
 
 combo=ttk.Combobox(raiz)
 combo.place(x=200,y=100)
-combo['values']=('Encrypt','Decrypt')
+combo['values']=('Signature','Verification')
 
 def generar_llaves():
-    os.system("openssl req -new -x509 -newkey rsa:2048 -keyout privkey.out -pubkey -out pubkey.out -days 365 -nodes -sha256")
-
+    pass
 def seleccionar_funcion():
         combo_sel=combo.get()
-        if combo_sel == "Encrypt":
+        if combo_sel == "Signature":
             pass
-            messagebox.showinfo("Success","Mensaje Encrypted Correctly")
+            messagebox.showinfo("Success","Mensaje encrypted and signed correctly")
         elif combo_sel == "Decrypt":
             pass
-            #messagebox.showinfo("Success","Message Decrypted Correctly")
+            messagebox.showinfo("Success","Message verified correctly")
         else:
             messagebox.showinfo("Error ","You must select an option")
 
@@ -65,8 +64,8 @@ pubkey=Button(raiz, text="Select Key",command=seleccionar_llave)
 pubkey.place(x=50,y=140)
 
 
-sel=Button(raiz, text="Start process",command=seleccionar_funcion)
-sel.place(x=50,y=180)
+start=Button(raiz, text="Start process",command=seleccionar_funcion)
+start.place(x=50,y=180)
 
 sel=Button(raiz, text="Generate Keys",command=generar_llaves)
 sel.place(x=200,y=180)
