@@ -67,7 +67,7 @@ def generar_llaves():
     file_out = open("public_bob.pem", "wb")
     file_out.write(public_key_bob)
     file_out.close()
-    
+
 
 def seleccionar_funcion():
         global message_v,key_v, signature_v
@@ -83,7 +83,7 @@ def seleccionar_funcion():
 
         elif combo_sel == "Verification":
             verify_signature(message_v,key_v, signature_v)
-            
+
         else:
             messagebox.showinfo("Error ","You must select an option")
 
@@ -120,7 +120,7 @@ def generate_signature(message_to_sign):
     signature = pkcs1_15.new(key).sign(h)
     message_signed = signature.decode("ISO-8859-1")
 
-    signed_file = open("message_s.txt", "w")
+    signed_file = open("message_s.txt", "w",encoding='utf-8')
     signed_file.write(message_signed)
     signed_file.close()
 
