@@ -75,24 +75,23 @@ def seleccionar_funcion():
         if combo_sel == "Signature":
             with open('strawberry.txt') as f:
                 message = f.readlines()
-            encoded_string = message.encode()
+                message = ''.join(message)
+            encoded_string = message.encode("utf-8")
             byte_array_message = bytearray(encoded_string)
             message_to_sign = generate_digest(byte_array_message)
             message_v,key_v, signature_v = generate_signature(message_to_sign)
 
-            messagebox.showinfo("Success","Mensaje encrypted and signed correctly")
         elif combo_sel == "Verification":
-            
             verify_signature(message_v,key_v, signature_v)
-            messagebox.showinfo("Success","Message verified correctly")
+            
         else:
             messagebox.showinfo("Error ","You must select an option")
 
 def abrirArchivo_a_Usar():
-    raiz.archivo=filedialog.askopenfilename(initialdir="C:")
+    raiz.archivo=filedialog.askopenfilename(initialdir="C:",title = "Select a txt file to sign",filetypes=(("txt files","*.txt"),("all files","*.*")))
 
 def seleccionar_llave():
-    raiz.llave=filedialog.askopenfilename(initialdir="C:")
+    raiz.llave=filedialog.askopenfilename(initialdir="C:",title = "Select private or public key",filetypes=(("pem files","*.pem"),("all files","*.*")))
 
 abrir=Button(raiz, text="Select File",command=abrirArchivo_a_Usar)
 abrir.place(x=50,y=100)
@@ -115,10 +114,10 @@ def generate_digest(message):
 
 def generate_signature(message_to_sign):
     print("Generating Signature")
-    key = RSA.import_key(open('private_key.der').read())
+    key = RSA.import_key(open('private_alice.pem').read())
     h = SHA256.new(message_to_sign)
     signature = pkcs1_15.new(key).sign(h)
-    message_signed = signature.decode('utf-8')
+    message_signed = signature.decode("utf-8")
 
     signed_file = open("message_s.txt", "w")
     signed_file.write(message_signed)
