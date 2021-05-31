@@ -6,7 +6,7 @@ import os, sys
 from Crypto.PublicKey import RSA
 from Crypto.Hash import SHA256
 from Crypto.Hash import SHA1
-from Crypto.PublicKey import RSA
+from Crypto.Signature import pkcs1_15
 
 raiz=Tk()
 raiz.title("Digital Signature")
@@ -87,5 +87,10 @@ def generate_signature(message_to_sign):
     key = RSA.import_key(open('private_key.der').read())
     h = SHA256.new(message_to_sign)
     signature = pkcs1_15.new(key).sign(h)
+    message_signed = signature.decode('utf-8')
+
+    signed_file = open("message_s.txt", "w")
+    signed_file.write(message_signed)
+    signed_file.close()
 
 raiz.mainloop()
