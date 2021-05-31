@@ -115,9 +115,10 @@ def generate_digest(message):
 def generate_signature(message_to_sign):
     print("Generating Signature")
     key = RSA.import_key(open('private_alice.pem').read())
+    message_to_sign = message_to_sign.encode("utf-8")
     h = SHA256.new(message_to_sign)
     signature = pkcs1_15.new(key).sign(h)
-    message_signed = signature.decode("utf-8")
+    message_signed = signature.decode("utf-8",errors='ignore')
 
     signed_file = open("message_s.txt", "w")
     signed_file.write(message_signed)
