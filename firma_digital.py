@@ -110,8 +110,8 @@ def verify_signature(message_v,key_v, signature_v):
     h = SHA256.new(message_v)
     try:
         pkcs1_15.new(key).verify(h, signature_v)
-        print("The signature is valid.")
+        messagebox.showinfo("Success","Message verified correctly valid signature")
     except (ValueError, TypeError):
-        print("The signature is not valid.")
+        messagebox.showinfo("Error","Signature not valid")
 
 raiz.mainloop()
