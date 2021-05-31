@@ -4,7 +4,7 @@ from tkinter import ttk
 import tkinter as tk
 import os, sys
 from Crypto.PublicKey import RSA
-from Crypto.Hash import SHA256
+from Crypto.Hash import SHA1
 from Crypto.Signature import PKCS1_v1_5
 
 raiz=Tk()
@@ -70,7 +70,10 @@ start.place(x=50,y=180)
 sel=Button(raiz, text="Generate Keys",command=generar_llaves)
 sel.place(x=200,y=180)
 
-
+def generate_digest():
+    h = SHA1.new()
+    h.update(b'Hello')
+    print(h.hexdigest())
 
 def generate_signature(key, data, sig_f):
     print("Generating Signature")
