@@ -127,7 +127,7 @@ def generate_signature(message_to_sign):
     return message_to_sign,key,signature
 
 def verify_signature(message_v,key_v, signature_v):
-    key = RSA.import_key(open('public_bob.pem').read())
+    key = RSA.import_key(open('public_alice.pem').read())
     h = SHA256.new(message_v)
     try:
         pkcs1_15.new(key).verify(h, signature_v)
