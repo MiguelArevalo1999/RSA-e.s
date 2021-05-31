@@ -4,8 +4,9 @@ from tkinter import ttk
 import tkinter as tk
 import os, sys
 from Crypto.PublicKey import RSA
+from Crypto.Hash import SHA256
 from Crypto.Hash import SHA1
-from Crypto.Signature import PKCS1_v1_5
+from Crypto.PublicKey import RSA
 
 raiz=Tk()
 raiz.title("Digital Signature")
@@ -43,9 +44,14 @@ def generar_llaves():
 def seleccionar_funcion():
         combo_sel=combo.get()
         if combo_sel == "Signature":
-            pass
+            with open('strawberry.txt') as f:
+                message = f.readlines()
+            encoded_string = message.encode()
+            byte_array_message = bytearray(encoded_string)
+            message_to_sign = generate_digest(byte_array_message)
+
             messagebox.showinfo("Success","Mensaje encrypted and signed correctly")
-        elif combo_sel == "Decrypt":
+        elif combo_sel == "Verification":
             pass
             messagebox.showinfo("Success","Message verified correctly")
         else:
@@ -70,17 +76,16 @@ start.place(x=50,y=180)
 sel=Button(raiz, text="Generate Keys",command=generar_llaves)
 sel.place(x=200,y=180)
 
-def generate_digest():
+def generate_digest(message):
     h = SHA1.new()
-    h.update(b'Hello')
-    print(h.hexdigest())
+    h.update(message)
 
-def generate_signature(key, data, sig_f):
+    return h.hexdigest()
+
+def generate_signature(message_to_sign):
     print("Generating Signature")
-    h = SHA256.new(data)
-    rsa = RSA.importKey(key)
-    signer = PKCS1_v1_5.new(rsa)
-    signature = signer.sign(h)
-    with open(sig_f, 'wb') as f: f.write(signature)
+    key = RSA.import_key(open('private_key.der').read())
+    h = SHA256.new(message_to_sign)
+    signature = pkcs1_15.new(key).sign(h)
 
 raiz.mainloop()
