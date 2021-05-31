@@ -46,7 +46,28 @@ combo.place(x=200,y=100)
 combo['values']=('Signature','Verification')
 
 def generar_llaves():
-    pass
+    key_alice = RSA.generate(2048)
+    private_key_alice = key_alice.export_key()
+    file_out = open("private_alice.pem", "wb")
+    file_out.write(private_key_alice)
+    file_out.close()
+
+    public_key_alice = key_alice.publickey().export_key()
+    file_out = open("public_alice.pem", "wb")
+    file_out.write(public_key_alice)
+    file_out.close()
+
+    key_bob = RSA.generate(2048)
+    private_key_bob = key_bob.export_key()
+    file_out = open("private_bob.pem", "wb")
+    file_out.write(private_key_bob)
+    file_out.close()
+
+    public_key_bob = key_bob.publickey().export_key()
+    file_out = open("public_bob.pem", "wb")
+    file_out.write(public_key_bob)
+    file_out.close()
+    
 
 def seleccionar_funcion():
         global message_v,key_v, signature_v
@@ -61,7 +82,7 @@ def seleccionar_funcion():
 
             messagebox.showinfo("Success","Mensaje encrypted and signed correctly")
         elif combo_sel == "Verification":
-            global message_v,key_v, signature_v 
+            
             verify_signature(message_v,key_v, signature_v)
             messagebox.showinfo("Success","Message verified correctly")
         else:
