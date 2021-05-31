@@ -8,6 +8,12 @@ from Crypto.Hash import SHA256
 from Crypto.Hash import SHA1
 from Crypto.Signature import pkcs1_15
 
+
+message_v = None
+key_v = None
+signature_v = None
+
+
 raiz=Tk()
 raiz.title("Digital Signature")
 raiz.resizable(0,0)
@@ -41,7 +47,9 @@ combo['values']=('Signature','Verification')
 
 def generar_llaves():
     pass
+
 def seleccionar_funcion():
+        global message_v,key_v, signature_v
         combo_sel=combo.get()
         if combo_sel == "Signature":
             with open('strawberry.txt') as f:
@@ -49,10 +57,12 @@ def seleccionar_funcion():
             encoded_string = message.encode()
             byte_array_message = bytearray(encoded_string)
             message_to_sign = generate_digest(byte_array_message)
+            message_v,key_v, signature_v = generate_signature(message_to_sign)
 
             messagebox.showinfo("Success","Mensaje encrypted and signed correctly")
         elif combo_sel == "Verification":
-            pass
+            global message_v,key_v, signature_v 
+            verify_signature(message_v,key_v, signature_v)
             messagebox.showinfo("Success","Message verified correctly")
         else:
             messagebox.showinfo("Error ","You must select an option")
@@ -92,5 +102,16 @@ def generate_signature(message_to_sign):
     signed_file = open("message_s.txt", "w")
     signed_file.write(message_signed)
     signed_file.close()
+
+    return message_to_sign,key,signature
+
+def verify_signature(message_v,key_v, signature_v):
+    key = RSA.import_key(open('public_key.der').read())
+    h = SHA256.new(message_v)
+    try:
+        pkcs1_15.new(key).verify(h, signature_v)
+        print("The signature is valid.")
+    except (ValueError, TypeError):
+        print("The signature is not valid.")
 
 raiz.mainloop()
