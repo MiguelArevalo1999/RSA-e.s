@@ -76,7 +76,7 @@ def seleccionar_funcion():
             with open('strawberry.txt') as f:
                 message = f.readlines()
                 message = ''.join(message)
-            encoded_string = message.encode("utf-8")
+            encoded_string = message.encode("ISO-8859-1")
             byte_array_message = bytearray(encoded_string)
             message_to_sign = generate_digest(byte_array_message)
             message_v,key_v, signature_v = generate_signature(message_to_sign)
@@ -115,10 +115,10 @@ def generate_digest(message):
 def generate_signature(message_to_sign):
     print("Generating Signature")
     key = RSA.import_key(open('private_alice.pem').read())
-    message_to_sign = message_to_sign.encode("utf-8")
+    message_to_sign = message_to_sign.encode("ISO-8859-1")
     h = SHA256.new(message_to_sign)
     signature = pkcs1_15.new(key).sign(h)
-    message_signed = signature.decode("utf-8",errors='ignore')
+    message_signed = signature.decode("ISO-8859-1")
 
     signed_file = open("message_s.txt", "w")
     signed_file.write(message_signed)
