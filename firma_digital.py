@@ -8,9 +8,8 @@ from Crypto.Hash import SHA256
 from Crypto.Hash import SHA1
 from Crypto.Signature import pkcs1_15
 from sys import getsizeof
+import linecache
 
-message_v = None
-key_v = None
 signature_v = None
 
 
@@ -70,7 +69,7 @@ def generar_llaves():
 
 
 def seleccionar_funcion():
-        global message_v,key_v, signature_v
+        global signature_v
         combo_sel=combo.get()
         if combo_sel == "Signature":
             with open('strawberry.txt') as f:
@@ -79,21 +78,21 @@ def seleccionar_funcion():
             encoded_string = message.encode("ISO-8859-1")
             byte_array_message = bytearray(encoded_string)
             message_to_sign = generate_digest(byte_array_message)
-            message_v,key_v, signature_v = generate_signature(message_to_sign)
+            signature_v = generate_signature(message_to_sign)
 
         elif combo_sel == "Verification":
-            # with open(raiz.archivo,"rb") as file:
-            #     mensaje_tov=file.read()
-            #     print(getsizeof(mensaje_tov))
-            #     size_txt=len(mensaje_tov)
-            #     print(size_txt)
-            #     mensaje_tov1=mensaje_tov[:1013]
-            #     digest_tov=mensaje_tov[1014:]
-            #     mess = open("dig_original.txt", "w",encoding='utf-8')
-            #     mess.write(digest_tov.decode('utf-8'))
-            #     with open(raiz.llave,"r") as file1:
-            #         key_tov=file1.read()
-                verify_signature(message_v,key_v, signature_v)
+            with open('message_s.txt') as f:
+                file = f.readlines()
+                message = file[0:37]
+                message = ''.join(message)
+                message = message.replace("\n\n","")
+                sign = file[38:39]
+                sign = ''.join(sign)
+                print(message)
+            encoded_string = message.encode("ISO-8859-1")
+            byte_array_message = bytearray(encoded_string)
+            digest_to_compare = generate_digest(byte_array_message)
+            verify_signature(digest_to_compare, signature_v)
 
         else:
             messagebox.showinfo("Error ","You must select an option")
@@ -136,21 +135,22 @@ def generate_signature(message_to_sign):
         message_strawberry = f.readlines()
         message_strawberry = ''.join(message_strawberry)
     signed_file.write(message_strawberry)
-    signed_file.write("\n")
+    signed_file.write("\n\n")
     signed_file.write(message_signed)
     signed_file.close()
 
 
 
-    return message_to_sign,key,signature
+    return signature
 
-def verify_signature(message_v,key_v, signature_v):
+def verify_signature(message, signature_v):
     key = RSA.import_key(open('public_alice.pem').read())
-    h = SHA256.new(message_v)
+    message = message.encode("ISO-8859-1")
+    h = SHA256.new(message)
     try:
         pkcs1_15.new(key).verify(h, signature_v)
         messagebox.showinfo("Success","Message verified correctly valid signature")
-    except (ValueError, TypeError):
+    except (ValueError, TypeError) as e:
         messagebox.showinfo("Error","Signature not valid")
 
 raiz.mainloop()
