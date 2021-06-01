@@ -124,7 +124,8 @@ def generate_signature(message_to_sign):
     with open('strawberry.txt') as f:
         message_strawberry = f.readlines()
         message_strawberry = ''.join(message_strawberry)
-    signed_file.write(message_strawberry)        
+    signed_file.write(message_strawberry)
+    signed_file.write("\n")        
     signed_file.write(message_signed)
     signed_file.close()
 
