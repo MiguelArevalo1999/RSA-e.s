@@ -82,18 +82,18 @@ def seleccionar_funcion():
             message_v,key_v, signature_v = generate_signature(message_to_sign)
 
         elif combo_sel == "Verification":
-            with open(raiz.archivo,"rb") as file:
-                mensaje_tov=file.read()
-                print(getsizeof(mensaje_tov))
-                size_txt=len(mensaje_tov)
-                print(size_txt)
-                mensaje_tov1=mensaje_tov[:1049]
-                digest_tov=mensaje_tov[1051:]
-                mess = open("dig_original.txt", "w",encoding='utf-8')
-                mess.write(digest_tov.decode('utf-8'))
-                with open(raiz.llave,"r") as file1:
-                    key_tov=file1.read()
-                verify_signature(mensaje_tov1,key_tov, digest_tov)
+            # with open(raiz.archivo,"rb") as file:
+            #     mensaje_tov=file.read()
+            #     print(getsizeof(mensaje_tov))
+            #     size_txt=len(mensaje_tov)
+            #     print(size_txt)
+            #     mensaje_tov1=mensaje_tov[:1013]
+            #     digest_tov=mensaje_tov[1014:]
+            #     mess = open("dig_original.txt", "w",encoding='utf-8')
+            #     mess.write(digest_tov.decode('utf-8'))
+            #     with open(raiz.llave,"r") as file1:
+            #         key_tov=file1.read()
+                verify_signature(message_v,key_v, signature_v)
 
         else:
             messagebox.showinfo("Error ","You must select an option")
@@ -144,11 +144,11 @@ def generate_signature(message_to_sign):
 
     return message_to_sign,key,signature
 
-def verify_signature(mensaje_tov1,key_tov, digest_tov):
+def verify_signature(message_v,key_v, signature_v):
     key = RSA.import_key(open('public_alice.pem').read())
-    h = SHA256.new(mensaje_tov1)
+    h = SHA256.new(message_v)
     try:
-        pkcs1_15.new(key).verify(h, digest_tov)
+        pkcs1_15.new(key).verify(h, signature_v)
         messagebox.showinfo("Success","Message verified correctly valid signature")
     except (ValueError, TypeError):
         messagebox.showinfo("Error","Signature not valid")
