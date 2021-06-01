@@ -121,8 +121,14 @@ def generate_signature(message_to_sign):
     message_signed = signature.decode("ISO-8859-1")
 
     signed_file = open("message_s.txt", "w",encoding='utf-8')
+    with open('strawberry.txt') as f:
+        message_strawberry = f.readlines()
+        message_strawberry = ''.join(message_strawberry)
+    signed_file.write(message_strawberry)        
     signed_file.write(message_signed)
     signed_file.close()
+
+    
 
     return message_to_sign,key,signature
 
