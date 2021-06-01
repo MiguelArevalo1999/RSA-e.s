@@ -7,7 +7,7 @@ from Crypto.PublicKey import RSA
 from Crypto.Hash import SHA256
 from Crypto.Hash import SHA1
 from Crypto.Signature import pkcs1_15
-
+from sys import getsizeof
 
 message_v = None
 key_v = None
@@ -82,13 +82,24 @@ def seleccionar_funcion():
             message_v,key_v, signature_v = generate_signature(message_to_sign)
 
         elif combo_sel == "Verification":
-            verify_signature(message_v,key_v, signature_v)
+            with open(raiz.archivo,"rb") as file:
+                mensaje_tov=file.read()
+                print(getsizeof(mensaje_tov))
+                size_txt=len(mensaje_tov)
+                print(size_txt)
+                mensaje_tov1=mensaje_tov[:1049]
+                digest_tov=mensaje_tov[1051:]
+                mess = open("dig_original.txt", "w",encoding='utf-8')
+                mess.write(digest_tov.decode('utf-8'))
+                with open(raiz.llave,"r") as file1:
+                    key_tov=file1.read()
+                verify_signature(mensaje_tov1,key_tov, digest_tov)
 
         else:
             messagebox.showinfo("Error ","You must select an option")
 
 def abrirArchivo_a_Usar():
-    raiz.archivo=filedialog.askopenfilename(initialdir="C:",title = "Select a txt file to sign",filetypes=(("txt files","*.txt"),("all files","*.*")))
+    raiz.archivo=filedialog.askopenfilename(initialdir="C:",title = "Select a txt file to sign or to verify",filetypes=(("txt files","*.txt"),("all files","*.*")))
 
 def seleccionar_llave():
     raiz.llave=filedialog.askopenfilename(initialdir="C:",title = "Select private or public key",filetypes=(("pem files","*.pem"),("all files","*.*")))
@@ -125,19 +136,19 @@ def generate_signature(message_to_sign):
         message_strawberry = f.readlines()
         message_strawberry = ''.join(message_strawberry)
     signed_file.write(message_strawberry)
-    signed_file.write("\n")        
+    signed_file.write("\n")
     signed_file.write(message_signed)
     signed_file.close()
 
-    
+
 
     return message_to_sign,key,signature
 
-def verify_signature(message_v,key_v, signature_v):
+def verify_signature(mensaje_tov1,key_tov, digest_tov):
     key = RSA.import_key(open('public_alice.pem').read())
-    h = SHA256.new(message_v)
+    h = SHA256.new(mensaje_tov1)
     try:
-        pkcs1_15.new(key).verify(h, signature_v)
+        pkcs1_15.new(key).verify(h, digest_tov)
         messagebox.showinfo("Success","Message verified correctly valid signature")
     except (ValueError, TypeError):
         messagebox.showinfo("Error","Signature not valid")
